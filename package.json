@@ -1,0 +1,40 @@
+{
+  "name": "devtree",
+  "version": "1.0.0",
+  "description": "first proyect with express and typescript",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ErickGBR/devtree.git"
+  },
+  "keywords": [
+    "ts",
+    "typescript",
+    "node",
+    "express",
+    "dev",
+    "devtree",
+    "backend",
+    "node",
+    "proyect",
+    "mongodb",
+    "mongo"
+  ],
+  "author": "Erick Burgos",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ErickGBR/devtree/issues"
+  },
+  "homepage": "https://github.com/ErickGBR/devtree#readme",
+  "dependencies": {
+    "express": "^4.21.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  }
+}
