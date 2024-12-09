@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.ts",
-    "build":"tsc"
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -31,7 +31,10 @@
   },
   "homepage": "https://github.com/ErickGBR/devtree#readme",
   "dependencies": {
-    "express": "^4.21.1"
+    "colors": "^1.4.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.1",
+    "mongoose": "^8.8.4"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
