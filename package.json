@@ -2,7 +2,7 @@
   "name": "devtree",
   "version": "1.0.0",
   "description": "first proyect with express and typescript",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "dev": "nodemon src/index.ts",
     "build": "tsc"
@@ -35,11 +35,13 @@
     "colors": "^1.4.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.1",
-    "mongoose": "^8.8.4"
+    "mongoose": "^8.8.4",
+    "slug": "^10.0.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/express": "^5.0.0",
+    "@types/slug": "^5.0.9",
     "nodemon": "^3.1.7",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
