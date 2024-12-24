@@ -6,11 +6,6 @@ import { hashPassword , checkPassword} from "../utils/auth";
 export const createAccount = async (req: Request, res: Response): Promise<void> => {
     const slug = (await import('slug')).default;
 
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        res.status(422).json({ errors: errors.array() });
-    }
-
     const { email, password } = req.body;
     const userExist = await User.findOne({ email });
 
@@ -41,12 +36,6 @@ export const createAccount = async (req: Request, res: Response): Promise<void> 
 
 
 export const login = async (req: Request, res: Response): Promise<void> => {
-
-    // Validate request body
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        res.status(422).json({ errors: errors.array() });
-    }
 
     const { email, password } = req.body;
 
