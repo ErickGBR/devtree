@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { validationResult } from "express-validator";
 import User from "../models/User";
 import { hashPassword , checkPassword} from "../utils/auth";
 
@@ -30,7 +29,7 @@ export const createAccount = async (req: Request, res: Response): Promise<void> 
     user.handle = handle;
 
     await user.save();
-    res.status(201).json(user);
+    res.status(201).send("User created successfully");
 
 }
 
@@ -57,6 +56,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
             message: error.message
         })
     }
+
+    res.status(200).send("Login successful");
 
 }
 
