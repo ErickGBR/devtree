@@ -51,7 +51,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     if (!isPassword) {
         const error = new Error("Invalid password");
         res.status(401).send(error.message);
-
+    }
     res.status(200).send("Login successful");
 
 }
