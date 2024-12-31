@@ -42,9 +42,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     const user = await User.findOne({ email });
     if (!user) {
         const error = new Error("User not found");
-        res.status(404).json({
-            message: error.message
-        })
+        res.status(404).send(error.message);
     }
 
 
@@ -52,10 +50,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     // Check if password is correct
     if (!isPassword) {
         const error = new Error("Invalid password");
-        res.status(401).json({
-            message: error.message
-        })
-    }
+        res.status(401).send(error.message);
 
     res.status(200).send("Login successful");
 
