@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import User from "../models/User";
+import { generateJWT } from "../utils/jwt";
 import { hashPassword , checkPassword} from "../utils/auth";
 
 export const createAccount = async (req: Request, res: Response): Promise<void> => {
@@ -52,7 +53,9 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         const error = new Error("Invalid password");
         res.status(401).send(error.message);
     }
-    res.status(200).send("Login successful");
+
+    const token = generateJWT({user: user._id});
+    res.status(200).send(token);
 
 }
 
