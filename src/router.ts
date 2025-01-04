@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { body } from "express-validator";
-import { createAccount, login } from "./handlers";
+import { createAccount, login, getUser } from "./handlers";
 import { handleInputError } from "./middlewares/validations";
 
 const router = Router();
@@ -19,5 +19,7 @@ router.post("/auth/login",
     body("password").notEmpty().withMessage("Password cannot be empty"),
     handleInputError,
     login);
+
+router.get("/user", getUser);
 
 export default router;
