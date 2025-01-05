@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import User from "../models/User";
-import jwt from "jsonwebtoken";
 import { generateJWT } from "../utils/jwt";
-
 import { hashPassword , checkPassword} from "../utils/auth";
+
+
 
 export const createAccount = async (req: Request, res: Response): Promise<void> => {
     const slug = (await import('slug')).default;
@@ -64,40 +64,5 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
 export const getUser = async (req: Request, res: Response): Promise<void> => {
 
-    const bearer = req.headers.authorization;
-
-    /**
-     * Check if bearer token exist
-     */
-    if(!bearer){
-        const error = new Error("Unauthorized");
-        res.status(401).json(error.message);
-    }
-
-    const [, token] = bearer.split(" ");
-    
-    /**
-     * Check if token is valid
-     */
-    if(!token){
-        const error = new Error("Unauthorized");
-        res.status(401).json(error.message);
-    }
-
-    /**
-     * Verify jwt token
-     */
-    try {
-        const result = jwt.verify(token, process.env.JWT_SECRET as string);
-        if(typeof result === "object" && result.id){
-            const user = await User.findById(result.id).select("name email handle");
-            if(!user){
-                const error = new Error("User not found");
-                res.status(404).json(error.message);
-            }
-            res.status(200).json(user);
-        }
-    } catch (error) {
-        res.status(401).json(error.message);
-    }
+   
 }
