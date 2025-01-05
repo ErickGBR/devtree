@@ -63,6 +63,5 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
 
 export const getUser = async (req: Request, res: Response): Promise<void> => {
-
-   
+    res.status(200).json(req.user);
 }

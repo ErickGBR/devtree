@@ -36,8 +36,8 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
      */
     try {
         const result = jwt.verify(token, process.env.JWT_SECRET as string);
-        if(typeof result === "object" && result.id){
-            const user = await User.findById(result.id).select("-password");
+        if(typeof result === "object" && result.user){
+            const user = await User.findById(result.user).select("-password");
             if(!user){
                 const error = new Error("User not found");
                 res.status(404).json(error.message);
