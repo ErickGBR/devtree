@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import User from "../models/User";
 import { generateJWT } from "../utils/jwt";
-import { hashPassword , checkPassword} from "../utils/auth";
+import { hashPassword, checkPassword } from "../utils/auth";
 
 
 
@@ -56,7 +56,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         res.status(401).send(error.message);
     }
 
-    const token = generateJWT({user: user._id});
+    const token = generateJWT({ user: user._id });
     res.status(200).send(token);
 
 }
@@ -69,11 +69,25 @@ export const getUser = async (req: Request, res: Response): Promise<void> => {
 
 export const updateProfle = async (req: Request, res: Response): Promise<void> => {
     try {
+        const slug = (await import('slug')).default;
+
+        const { description } = req.body;
+        const handle = slug(req.body.handle, "");
         
+        const handleExist = await User.findOne({ handle });
+        if (handleExist && handleExist.email !== req.user.email) {
+            const error = new Error("This handle already exist!");
+            res.status(409).json({
+                message: error.message
+            })
+        }
+        req.user.handle = handle;
+        req.user.description = description;
+        req.user.save();
     } catch (error) {
 
         res.status(500).json(error.message);
 
-        
+
     }
 }
