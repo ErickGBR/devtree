@@ -13,9 +13,11 @@ declare global {
 
 export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
     const bearer = req.headers.authorization;
+    
     /**
      * Check if bearer token exist
      */
+    
     if(!bearer){
         const error = new Error("Unauthorized");
         res.status(401).json(error.message);
@@ -26,6 +28,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     /**
      * Check if token is valid
      */
+    
     if(!token){
         const error = new Error("Unauthorized");
         res.status(401).json(error.message);
@@ -34,6 +37,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     /**
      * Verify jwt token
      */
+
     try {
         const result = jwt.verify(token, process.env.JWT_SECRET as string);
         if(typeof result === "object" && result.user){

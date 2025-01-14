@@ -42,6 +42,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     const { email, password } = req.body;
 
     // Check if user exist
+    
     const user = await User.findOne({ email });
     if (!user) {
         const error = new Error("User not found");
@@ -50,6 +51,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
 
     const isPassword = await checkPassword(password, user.password)
+    
     // Check if password is correct
     if (!isPassword) {
         const error = new Error("Invalid password");
@@ -75,12 +77,14 @@ export const updateProfle = async (req: Request, res: Response): Promise<void> =
         const handle = slug(req.body.handle, "");
 
         const handleExist = await User.findOne({ handle });
+        
         if (handleExist && handleExist.email !== req.user.email) {
             const error = new Error("This handle already exist!");
             res.status(409).json({
                 message: error.message
             })
         }
+
         req.user.handle = handle;
         req.user.description = description;
         req.user.save();
