@@ -6,6 +6,7 @@ export interface IUser extends Document {
     email: string;
     description: string;
     password: string;
+    image: string;
 }
 
 const userSchema = new Schema({
@@ -38,6 +39,10 @@ const userSchema = new Schema({
         required: true,
         trim: true,
     },
+    image: {
+        type: String,
+        default: ""
+    }
 })
 
 const User = mongoose.model<IUser>("user", userSchema)
