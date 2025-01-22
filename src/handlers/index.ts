@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import User from "../models/User";
+import formidable from "formidable";
+import cloudinary from "../config/cloudinary";
 import { generateJWT } from "../utils/jwt";
 import { hashPassword, checkPassword } from "../utils/auth";
 
@@ -93,6 +95,35 @@ export const updateProfle = async (req: Request, res: Response): Promise<void> =
 
     } catch (error) {
         console.log(error)
+        res.status(500).send(error.message);
+    }
+}
+
+
+export const uploadImage = async (req: Request, res: Response): Promise<void> => {
+    try {
+
+        const form = formidable({ multiples: false });
+        form.parse(req, async (err, fields, files) => {
+            console.log(files.file[0].filepath, {}, async function (error, result) {
+                if (error) {
+                    const error = new Error("Error uploading image");
+                    res.status(500).send(error.message);
+                }
+
+                if (result) {
+                    result.secure_url;
+                    
+                }
+                
+            })
+            cloudinary.uploader.upload(files.file[0].filepath)
+        });
+        
+
+        res.status(200).send("Profile updated successfully");
+
+    } catch (error) {
         res.status(500).send(error.message);
     }
 }

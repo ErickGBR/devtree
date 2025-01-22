@@ -1,6 +1,12 @@
 import { Router } from "express";
 import { body } from "express-validator";
-import { createAccount, login, getUser, updateProfle } from "./handlers";
+import {
+    createAccount,
+    login,
+    getUser,
+    updateProfle,
+    uploadImage
+} from "./handlers";
 import { handleInputError } from "./middlewares/validations";
 import { authenticate } from "./middlewares/auth";
 
@@ -14,7 +20,6 @@ router.post("/auth/register",
     handleInputError,
     createAccount);
 
-
 router.post("/auth/login",
     body("email").isEmail().withMessage("Email is not valid"),
     body("password").notEmpty().withMessage("Password cannot be empty"),
@@ -22,9 +27,12 @@ router.post("/auth/login",
     login);
 
 router.get("/user", authenticate, getUser);
+
 router.patch("/user",
     body("handle").notEmpty().withMessage("Handle cannot be empty"),
     body("description").notEmpty().withMessage("Name cannot be empty"),
-     authenticate, updateProfle);
+    authenticate, updateProfle);
+
+router.post("/user/image", authenticate, uploadImage);
 
 export default router;
