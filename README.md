@@ -15,9 +15,6 @@ You can install the necessary dependencies using one of the following package ma
 - **npm**  
   `npm install`
 
-- **Bun**  
-  `bun install`
-
 ## Running the Project
 
 To run the project after compilation, use one of the following commands:
