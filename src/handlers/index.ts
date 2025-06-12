@@ -50,19 +50,21 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     if (!user) {
         const error = new Error("User not found");
         res.status(404).send(error.message);
+        return;
     }
 
-
-    const isPassword = await checkPassword(password, user.password)
+    const isPassword = await checkPassword(password, user?.password)
     
     // Check if password is correct
     if (!isPassword) {
         const error = new Error("Invalid password");
         res.status(401).send(error.message);
+        return; 
     }
 
     const token = generateJWT({ user: user._id });
     res.status(200).send(token);
+    return; 
 
 }
 
@@ -76,7 +78,7 @@ export const updateProfle = async (req: Request, res: Response): Promise<void> =
     try {
 
         const slug = (await import('slug')).default;
-        const { description } = req.body;
+        const { description, links} = req.body;
         const handle = slug(req.body.handle, "");
 
         const handleExist = await User.findOne({ handle });
@@ -90,6 +92,7 @@ export const updateProfle = async (req: Request, res: Response): Promise<void> =
 
         req.user.handle = handle;
         req.user.description = description;
+        req.user.links = links
         req.user.save();
 
         res.status(200).send("Profile updated successfully");
@@ -103,29 +106,42 @@ export const updateProfle = async (req: Request, res: Response): Promise<void> =
 
 export const uploadImage = async (req: Request, res: Response): Promise<void> => {
     try {
-
         const form = formidable({ multiples: false });
-        form.parse(req, async (err, fields, files) => {
-            console.log(files.file[0].filepath, { public_id: uuid() }, async function (error, result) {
-                if (error) {
-                    const error = new Error("Error uploading image");
-                    res.status(500).send(error.message);
-                }
-
-                if (result) {
-                    req.user.image = result.secure_url;
-                    await req.user.save();
-                    res.json({image: result.secure_url})
-                }
-                
-            })
-            cloudinary.uploader.upload(files.file[0].filepath)
+        form.parse(req, (err, fields, files) => {
+            if (err) {
+                console.error(err);
+                res.status(500).send("Error parsing the file");
+                return;
+            }
         });
-        
+        // Parse the form data
 
-        res.status(200).send("Profile updated successfully");
+        const parseForm = (): Promise<{ fields: formidable.Fields, files: formidable.Files }> => {
+            return new Promise((resolve, reject) => {
+                form.parse(req, (err, fields, files) => {
+                    if (err) reject(err);
+                    else resolve({ fields, files });
+                });
+            });
+        };
 
+        const { files } = await parseForm();
+
+        const file = files.file as formidable.File | formidable.File[]; // can be a single file or an array of files
+        const filepath = Array.isArray(file) ? file[0].filepath : file.filepath;
+
+        // upload the image to cloudinary
+        const result = await cloudinary.uploader.upload(filepath, {
+            public_id: uuid(),
+        });
+
+        // create a new user image
+        req.user.image = result.secure_url;
+        await req.user.save();
+
+        res.status(200).json({ image: result.secure_url });
     } catch (error) {
-        res.status(500).send(error.message);
+        console.error(error);
+        res.status(500).send("Error uploading image");
     }
-}
+};

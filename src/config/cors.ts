@@ -4,6 +4,8 @@ export const corsConfig: CorsOptions = {
     origin: (origin, callback) => {
         const whitelist = [process.env.FRONTEND_URL]
 
+        console.log(whitelist)
+
         /*
         * If the --api flag is passed, we will allow any origin from postman or any other API client
         * This is useful for testing the API with postman
