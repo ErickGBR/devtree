@@ -5,7 +5,8 @@ import {
     login,
     getUser,
     updateProfle,
-    uploadImage
+    uploadImage,
+    getUserByHandle
 } from "./handlers";
 import { handleInputError } from "./middlewares/validations";
 import { authenticate } from "./middlewares/auth";
@@ -34,5 +35,7 @@ router.patch("/user",
     authenticate, updateProfle);
 
 router.post("/user/image", authenticate, uploadImage);
+
+router.get('/:handle', getUserByHandle);
 
 export default router;

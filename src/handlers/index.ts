@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import User from "../models/User";
 import formidable from "formidable";
 import { v4 as uuid } from "uuid";
@@ -45,7 +45,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     const { email, password } = req.body;
 
     // Check if user exist
-    
+
     const user = await User.findOne({ email });
     if (!user) {
         const error = new Error("User not found");
@@ -54,17 +54,17 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     }
 
     const isPassword = await checkPassword(password, user?.password)
-    
+
     // Check if password is correct
     if (!isPassword) {
         const error = new Error("Invalid password");
         res.status(401).send(error.message);
-        return; 
+        return;
     }
 
     const token = generateJWT({ user: user._id });
     res.status(200).send(token);
-    return; 
+    return;
 
 }
 
@@ -78,11 +78,11 @@ export const updateProfle = async (req: Request, res: Response): Promise<void> =
     try {
 
         const slug = (await import('slug')).default;
-        const { description, links} = req.body;
+        const { description, links } = req.body;
         const handle = slug(req.body.handle, "");
 
         const handleExist = await User.findOne({ handle });
-        
+
         if (handleExist && handleExist.email !== req.user.email) {
             const error = new Error("This handle already exist!");
             res.status(409).json({
@@ -143,5 +143,27 @@ export const uploadImage = async (req: Request, res: Response): Promise<void> =>
     } catch (error) {
         console.error(error);
         res.status(500).send("Error uploading image");
+    }
+};
+
+
+export const getUserByHandle = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    try {
+        const { handle } = req.params;
+        const user = await User.findOne({ handle }).select("-password -email -__v -_id");
+
+        if (!user) {
+            res.status(404).json({ message: "User not found" });
+            return;
+        }
+
+        res.status(200).json(user);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error fetching user" });
     }
 };
