@@ -155,13 +155,34 @@ export const getUserByHandle = async (
     try {
         const { handle } = req.params;
         const user = await User.findOne({ handle }).select("-password -email -__v -_id");
-
         if (!user) {
             res.status(404).json({ message: "User not found" });
             return;
         }
 
         res.status(200).json(user);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error fetching user" });
+    }
+};
+
+
+
+
+export const searchByHandle = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    try {
+        const { handle } = req.params;
+        const userExist = await User.findOne({ handle });
+        if (userExist) {
+            res.status(409).json({ message: "User "+handle+" is already taken" });
+            return;
+        }
+        res.status(200).json({ message: "User "+handle+" is available" });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Error fetching user" });

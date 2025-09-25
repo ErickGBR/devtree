@@ -6,7 +6,8 @@ import {
     getUser,
     updateProfle,
     uploadImage,
-    getUserByHandle
+    getUserByHandle,
+    searchByHandle
 } from "./handlers";
 import { handleInputError } from "./middlewares/validations";
 import { authenticate } from "./middlewares/auth";
@@ -31,11 +32,15 @@ router.get("/user", authenticate, getUser);
 
 router.patch("/user",
     body("handle").notEmpty().withMessage("Handle cannot be empty"),
-    body("description").notEmpty().withMessage("Name cannot be empty"),
     authenticate, updateProfle);
 
 router.post("/user/image", authenticate, uploadImage);
 
 router.get('/:handle', getUserByHandle);
+router.get('/search/:handle',
+    body("handle").notEmpty().withMessage("Handle cannot be empty"),
+    handleInputError,
+    searchByHandle);
+
 
 export default router;
