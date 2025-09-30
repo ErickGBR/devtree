@@ -37,7 +37,8 @@ router.patch("/user",
 router.post("/user/image", authenticate, uploadImage);
 
 router.get('/:handle', getUserByHandle);
-router.get('/search/:handle',
+
+router.post('/search',
     body("handle").notEmpty().withMessage("Handle cannot be empty"),
     handleInputError,
     searchByHandle);

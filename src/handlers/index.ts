@@ -176,7 +176,7 @@ export const searchByHandle = async (
     next: NextFunction
 ): Promise<void> => {
     try {
-        const { handle } = req.params;
+        const { handle } = req.body;
         const userExist = await User.findOne({ handle });
         if (userExist) {
             res.status(409).json({ message: "User "+handle+" is already taken" });
