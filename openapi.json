@@ -1,0 +1,185 @@
+
+---
+
+## 2️⃣ OpenAPI 3.0 Specification (JSON)
+
+Save this as `openapi.json`:
+
+```json
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Devtree Clone Backend",
+    "version": "1.0.0",
+    "description": "OpenAPI specification for Devtree Clone Backend"
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:4000",
+      "description": "Local server"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Register a new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "handle": { "type": "string" },
+                  "name": { "type": "string" },
+                  "email": { "type": "string", "format": "email" },
+                  "password": { "type": "string", "minLength": 8 }
+                },
+                "required": ["handle", "name", "email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "User created successfully" },
+          "409": { "description": "User or handle already exists" }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Login user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string", "format": "email" },
+                  "password": { "type": "string" }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "JWT token returned" },
+          "401": { "description": "Invalid password" },
+          "404": { "description": "User not found" }
+        }
+      }
+    },
+    "/user": {
+      "get": {
+        "summary": "Get authenticated user",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "User object returned" },
+          "401": { "description": "Unauthorized" }
+        }
+      },
+      "patch": {
+        "summary": "Update user profile",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "handle": { "type": "string" },
+                  "description": { "type": "string" },
+                  "links": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  }
+                },
+                "required": ["handle"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Profile updated successfully" },
+          "409": { "description": "Handle already exists" },
+          "500": { "description": "Internal server error" }
+        }
+      }
+    },
+    "/user/image": {
+      "post": {
+        "summary": "Upload profile image",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": { "type": "string", "format": "binary" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Image uploaded successfully" },
+          "500": { "description": "Error uploading image" }
+        }
+      }
+    },
+    "/{handle}": {
+      "get": {
+        "summary": "Get user by handle",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "handle",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "User object returned" },
+          "404": { "description": "User not found" }
+        }
+      }
+    },
+    "/search": {
+      "post": {
+        "summary": "Search user by handle",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "handle": { "type": "string" }
+                },
+                "required": ["handle"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Handle is available" },
+          "409": { "description": "Handle is already taken" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
